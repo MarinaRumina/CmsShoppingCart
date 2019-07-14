@@ -5,6 +5,11 @@ VisualStudioVersion = 15.0.27703.2035
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CmsShoppingCart", "CmsShoppingCart\CmsShoppingCart.csproj", "{118D2D09-5C73-4CC0-A738-7FDF4CF399A8}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{FA961845-6AE9-47A7-B27F-99A49E61F3AE}"
+	ProjectSection(SolutionItems) = preProject
+		SQLCreateTbl.sql = SQLCreateTbl.sql
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
