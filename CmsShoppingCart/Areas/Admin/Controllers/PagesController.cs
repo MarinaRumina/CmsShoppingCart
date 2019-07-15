@@ -89,6 +89,7 @@ namespace CmsShoppingCart.Areas.Admin.Controllers
         }
 
         // GET: Admin/Pages/EditPage/id
+        [HttpGet]
         public ActionResult EditPage(int id)
         {
             // Declare pageVM
@@ -112,5 +113,69 @@ namespace CmsShoppingCart.Areas.Admin.Controllers
             // Return view with model
             return View(model);
         }
+
+        // GET: Admin/Pages/EditPage/id
+        [HttpPost]
+        public ActionResult EditPage(PageVM model)
+        {
+            // Check model state
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+
+            using (Db db = new Db())
+            {
+                // Get page Id
+                int id = model.Id;
+
+                // Declare slug
+                string slug = "home";
+
+                // Get the page
+                PageDTO dto = db.Pages.Find(id);
+
+                // DTO the title
+                dto.Title = model.Title;
+
+                // Check the slug and set it if needed
+                if (model.Slug != "home")
+                {
+                    if (string.IsNullOrWhiteSpace(model.Slug))
+                    {
+                        slug = model.Title.Replace(" ", "-").ToLower();
+                    }
+                    else
+                    {
+                        slug = model.Slug.Replace(" ", "-").ToLower();
+                    }
+                }
+
+                // Make sure that the title and slug are unique
+                if (    db.Pages.Where(x => x.Id != id).Any(x => x.Title == model.Title) 
+                    ||  db.Pages.Where(x => x.Id != id).Any(x => x.Slug == slug))
+                {
+                    ModelState.AddModelError("", "This title or slug is already exist.");
+                    return View(model);
+                }
+
+                // DTO the rest
+                dto.Slug = slug;
+                dto.Body = model.Body;
+                dto.HasSidebar = model.HasSidebar;
+
+                // Save the DTO
+                db.SaveChanges();
+
+            }
+
+            // Set TempData message
+            TempData["SuccessMessage"] = "You're changes have been saved.";
+
+            // Redirect
+            return RedirectToAction("EditPage");
+        }
+
     }
 }
