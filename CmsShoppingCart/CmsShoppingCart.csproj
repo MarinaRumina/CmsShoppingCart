@@ -179,6 +179,7 @@
     <Content Include="Content\bootstrap-reboot.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\img\ajax-loader.gif" />
     <Content Include="favicon.ico" />
     <Content Include="Content\fileman\css\images\animated-overlay.gif" />
     <Content Include="Content\fileman\css\images\ui-bg_flat_0_aaaaaa_40x100.png" />
@@ -860,6 +861,7 @@
     <Content Include="Content\fileman\lang\sk.json" />
     <Content Include="Content\fileman\lang\tr.json" />
     <Content Include="Content\fileman\web.config" />
+    <Content Include="Areas\Admin\Views\Shop\Categories.cshtml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -904,7 +906,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\Admin\Models\" />
-    <Folder Include="Areas\Admin\Views\Shop\" />
     <Folder Include="Content\fileman\aspnet_client\system_web\2_0_50727\" />
     <Folder Include="Content\fileman\aspnet_client\system_web\4_0_30319\" />
     <Folder Include="Content\fileman\tmp\" />
