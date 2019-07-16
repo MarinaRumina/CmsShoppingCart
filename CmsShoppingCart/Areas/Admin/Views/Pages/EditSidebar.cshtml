@@ -42,3 +42,10 @@
 <div>
     @Html.ActionLink("Back to Pages List", "") <!-- Returns to /Admin/Pages--> 
 </div>
+
+@section Scripts {
+    <script src="~/Scripts/ckeditor/ckeditor.js"></script>
+    <script>
+        CKEDITOR.replace("Body");   // "Body" is the name of TextArea
+    </script>
+}
