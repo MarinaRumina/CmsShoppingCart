@@ -1,4 +1,8 @@
-﻿table.sorting tr:not(.home) {
+﻿.navbar {
+    margin-bottom: 2rem;
+}
+
+table.sorting tr:not(.home) {
     cursor: pointer;
 }
 
