@@ -155,9 +155,11 @@
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
     <Compile Include="Areas\Admin\Controllers\DashboardController.cs" />
     <Compile Include="Areas\Admin\Controllers\PagesController.cs" />
+    <Compile Include="Areas\Admin\Controllers\ShopController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Data\CategoryDTO.cs" />
     <Compile Include="Models\Data\Db.cs" />
     <Compile Include="Models\Data\PageDTO.cs" />
     <Compile Include="Models\Data\SidebarDTO.cs" />
@@ -901,6 +903,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\Admin\Models\" />
+    <Folder Include="Areas\Admin\Views\Shop\" />
     <Folder Include="Content\fileman\aspnet_client\system_web\2_0_50727\" />
     <Folder Include="Content\fileman\aspnet_client\system_web\4_0_30319\" />
     <Folder Include="Content\fileman\tmp\" />
