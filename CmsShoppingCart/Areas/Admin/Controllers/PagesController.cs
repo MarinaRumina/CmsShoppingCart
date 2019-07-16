@@ -1,4 +1,5 @@
 ﻿using CmsShoppingCart.Models.Data;
+using CmsShoppingCart.Models.ViewModels;
 using CmsShoppingCart.Models.ViewModels.Pages;
 using System;
 using System.Collections.Generic;
@@ -244,6 +245,48 @@ namespace CmsShoppingCart.Areas.Admin.Controllers
                     count++;
                 }
             }
+        }
+
+        // GET: Admin/Pages/EditSidebar
+        [HttpGet]
+        public ActionResult EditSidebar()
+        {
+            // Declare the model
+            SidebarVM model;
+
+            using (Db db = new Db())
+            {
+                // Get the DTO
+                SidebarDTO dto = db.Sidebar.Find(1);    // we have only one sidebar
+
+                // Init the model
+                model = new SidebarVM(dto);
+            }
+
+            // Return view with the model
+            return View(model);
+        }
+
+        // POST: Admin/Pages/EditSidebar
+        [HttpPost]
+        public ActionResult Editsidebar(SidebarVM model)
+        {
+            using (Db db = new Db())
+            {
+                // Get the DTO
+                SidebarDTO dto = db.Sidebar.Find(1);
+
+                // DTO the body
+                dto.Body = model.Body;
+
+                // Save
+                db.SaveChanges();
+            }
+            // Set TempData message
+            TempData["SuccessMessage"] = "Your changes to the sidebar were saved successfully";
+
+            // Redirect
+            return RedirectToAction("EditSidebar");
         }
     }
 }
