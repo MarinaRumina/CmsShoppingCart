@@ -10,16 +10,16 @@
     @Html.ActionLink("Add New Page", "AddPage")
 </p>
 
-@if (! Model.Any())
+@if (!Model.Any())
 {
     <h2 class="text-center">There are no pages yet!</h2>
 }
 else
-{ 
-    <table class="table">
-        <tr>
+{
+    <table class="table sorting" id="pagesTbl">
+        <tr class="home">
             <th>
-               Title
+                Title
             </th>
             <th>
                 Slug
@@ -31,35 +31,41 @@ else
             <th></th>
         </tr>
 
-    @foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Slug)
-            </td>
-            <td class="text-center">
-                @Html.DisplayFor(modelItem => item.HasSidebar)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "EditPage", new { id = item.Id }) |
-                @Html.ActionLink("Details", "PageDetails", new { id = item.Id }) |
-                @if (item.Slug != "home")
-                {
-                    @Html.ActionLink("Delete", "DeletePage", new { id = item.Id }, new { @class = "delete" })
-                }
+        @foreach (var item in Model)
+        {
+            <tr id="id_@item.Id" class="@item.Slug">
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Slug)
+                </td>
+                <td class="text-center">
+                    @Html.DisplayFor(modelItem => item.HasSidebar)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "EditPage", new { id = item.Id }) |
+                    @Html.ActionLink("Details", "PageDetails", new { id = item.Id }) |
+                    @if (item.Slug != "home")
+                    {
+                        @Html.ActionLink("Delete", "DeletePage", new { id = item.Id }, new { @class = "delete" })
+                    }
 
-            </td>
-        </tr>
-    }
+                </td>
+            </tr>
+        }
 
     </table>
 }
 
 @section Scripts {
-    
+
+    <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js"></script>
+
     <script>
+        /*
+        * Confirm page deletion
+        */
         $(function () {
             $('a.delete').click(function () {
                 if (!confirm("Confirm page deletion?")) {
@@ -67,6 +73,25 @@ else
                 }
             })
         });
+            /************************************************/
+
+        /*
+        * Adding drad-and-drop functionality using jQuery UI
+        */
+
+        $('table#pagesTbl tbody').sortable({    // in order to sort tr's have to add tbody to selector
+            items: 'tr:not(.home)',
+            placeholder: 'ui-state-highlight',  // adds this class to the place, where dragging to 
+            update: function () {
+                var ids = $('table#pagesTbl tbody').sortable('serialize'); // serializes data from line we are moving
+
+                var url = '/Admin/Pages/ReorderPages';
+
+                $.post(url, ids, function (data) {  // ajax POST request to /Admin/Pages/ReorderPages where we are saving new order of the elements
+                });
+            }
+        });
+        /************************************************/
     </script>
-    
+
 }

@@ -153,8 +153,8 @@ namespace CmsShoppingCart.Areas.Admin.Controllers
                 }
 
                 // Make sure that the title and slug are unique
-                if (    db.Pages.Where(x => x.Id != id).Any(x => x.Title == model.Title) 
-                    ||  db.Pages.Where(x => x.Id != id).Any(x => x.Slug == slug))
+                if (db.Pages.Where(x => x.Id != id).Any(x => x.Title == model.Title)
+                    || db.Pages.Where(x => x.Id != id).Any(x => x.Slug == slug))
                 {
                     ModelState.AddModelError("", "This title or slug is already exist.");
                     return View(model);
@@ -178,7 +178,7 @@ namespace CmsShoppingCart.Areas.Admin.Controllers
         }
 
         // GET: Admin/Pages/PageDetails/id
-        public ActionResult PageDetails (int id)
+        public ActionResult PageDetails(int id)
         {
             // Declare PageVM
             PageVM model;
@@ -197,13 +197,13 @@ namespace CmsShoppingCart.Areas.Admin.Controllers
                 // Init pageVM
                 model = new PageVM(dto);
             }
-            
+
             // Return view with model
             return View(model);
         }
 
         // DELETE: Admin/Page/DeletePage/id
-        public ActionResult DeletePage (int id)
+        public ActionResult DeletePage(int id)
         {
             using (Db db = new Db())
             {
@@ -221,5 +221,29 @@ namespace CmsShoppingCart.Areas.Admin.Controllers
             return RedirectToAction("Index");
         }
 
+        // POST: Admin/Pages/ReorderPages
+        [HttpPost]
+        public void ReorderPages(int[] id)
+        {
+            using (Db db = new Db())
+            {
+                // Set initial count
+                int count = 1; // HomePage Sorting order is 0, so all other pages will be after the Home page
+
+                // Declare PageDTO
+                PageDTO dto;
+
+                // Set sorting for each page
+                foreach (var pageId in id)
+                {
+                    dto = db.Pages.Find(pageId);
+                    dto.Sorting = count;
+
+                    db.SaveChanges();
+
+                    count++;
+                }
+            }
+        }
     }
 }
