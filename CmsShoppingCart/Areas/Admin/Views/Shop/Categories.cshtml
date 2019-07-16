@@ -22,7 +22,7 @@
 }
 else
 {
-    <table class="table sorting" id="pages">
+    <table class="table sorting" id="pagesTbl">
         <tr class="home">
             <th>
                 @Html.DisplayNameFor(model => model.Name)
@@ -43,5 +43,118 @@ else
         }
 
     </table>
+
+}
+
+
+@section Scripts {
+
+    <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js"></script>
+
+    <script>
+
+        $(function () {
+
+            /*
+            * Add new Category
+            */
+            var newCatA = $('a#newcata');
+            var newCatTextInput = $('#newcatname');
+            var ajaxText = $('span.ajax-text');
+            var table = $('table#pages tbody');
+
+            newCatTextInput.keyup(function (e) {    // Grabbing keyup on New Category name textbox input
+                if (e.keyCode == 13) {
+                    newCatA.click();                // Click on the link to add a Category if keyup was on Enter key
+                }
+
+            });
+
+            newCatA.click(function (e) {            // Creating ajax call to check and add new Category name
+                e.preventDefault();
+
+                var catName = newCatTextInput.val();
+
+                if (catName.length < 2) {
+                    alert('Category name have to be at least 2 characters long.');
+                    return false;
+                }
+
+                ajaxText.show();
+
+                var url = '/admin/shop/AddNewCategory';
+
+                $.post(url, { catname: catName }, function (data) {
+
+                    var response = data.trim();
+
+                    if (response == 'titletaken') {
+                        ajaxText.html('<span class="alert alert-danger">This Category title already exists!</span>');
+                        setTimeout(function () {
+                            ajaxText.fadeOut('fast', function () {
+                                ajaxText.html('<img src="/Content/img/ajax-loader.gif" />');
+                            });
+                        }, 2000);
+                        return false;
+
+                    }
+                    else {
+                        if (!$('table#pages').length) {     // Checking if the table exists
+                            location.reload();
+                        } else {
+                            ajaxText.html('<span class="alert alert-success">The Categoryhas been added.</span>');
+                            setTimeout(function () {
+                                ajaxText.fadeOut('fast', function () {
+                                    ajaxText.html('<img src="/Content/img/ajax-loader.gif" />');
+                                });
+                            }, 2000);
+
+                            newCatTextInput.val('');
+
+                            var toAppend = $('table#pages body tr:last').clone();   // making a copy of last tr of the table
+                            toAppend.attr('id', 'id_' + data);                      // replacing the id of the copy by new one (data = id)
+                            toAppend.find('#item_Name').val(catName);               // replacing the name of the copied category by new one from input
+                            toAppend.find('a.delete').attr('href', '/admin/shop/DeleteCategory' + data); // replacing an href by appropriate one
+
+                            table.append(toAppend);                                 // appending updated row to the table
+                            table.sortable('refresh');                              // refreshing the table so it become sortable immidiately 
+
+                        }
+                    }
+                });
+            });
+
+
+            /************************************************/
+
+            /*
+            * Confirm page deletion
+            */
+            $('a.delete').click(function () {
+                if (!confirm("Confirm page deletion?")) {
+                    return false;
+                }
+            })
+        });
+            /************************************************/
+
+        /*
+        * Adding drad-and-drop functionality using jQuery UI
+        */
+
+        $('table#pagesTbl tbody').sortable({    // in order to sort tr's have to add tbody to selector
+            items: 'tr:not(.home)',
+            placeholder: 'ui-state-highlight',  // adds this class to the place, where dragging to
+            update: function () {
+                var ids = $('table#pagesTbl tbody').sortable('serialize'); // serializes data from line we are moving
+
+                var url = '/Admin/Pages/ReorderPages';
+
+                $.post(url, ids, function (data) {  // ajax POST request to /Admin/Pages/ReorderPages where we are saving new order of the elements
+                });
+            }
+        });
+        /************************************************/
+    </script>
 
 }
