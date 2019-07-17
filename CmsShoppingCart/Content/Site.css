@@ -7,6 +7,10 @@ div.new-cat {
     position: relative;
 }
 
+.ui-state-highlight {
+    border: 1px dashed #cccccc;
+}
+
 span.ajax-text {
     display: none;
 }
@@ -15,6 +19,6 @@ table.sorting tr:not(.home) {
     cursor: pointer;
 }
 
-.ui-state-highlight {
-    border: 1px dashed #cccccc;
+table.sorting.categories td {
+    padding: 20px;
 }

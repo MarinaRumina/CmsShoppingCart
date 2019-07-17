@@ -32,7 +32,7 @@ namespace CmsShoppingCart.Areas.Admin.Controllers
 
         // POST: Admin/Shop/AddNewCategory
         [HttpPost]
-        public string AddNewCategory (string catName)
+        public string AddNewCategory(string catName)
         {
             // Declare an id
             string id;
@@ -65,5 +65,31 @@ namespace CmsShoppingCart.Areas.Admin.Controllers
 
             return id;
         }
+
+        // POST: Admin/Pages/ReorderCategories
+        [HttpPost]
+        public void ReorderCategories(int[] id)
+        {
+            using (Db db = new Db())
+            {
+                // Set initial count
+                int count = 1; // HomePage Sorting order is 0, so all other pages will be after the Home page
+
+                // Declare CategoryDTO
+                CategoryDTO dto;
+
+                // Set sorting for each category
+                foreach (var catId in id)
+                {
+                    dto = db.Categories.Find(catId);
+                    dto.Sorting = count;
+
+                    db.SaveChanges();
+
+                    count++;
+                }
+            }
+        }
+
     }
 }

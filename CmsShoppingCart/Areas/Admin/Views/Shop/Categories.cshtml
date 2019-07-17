@@ -22,7 +22,7 @@
 }
 else
 {
-    <table class="table sorting" id="pagesTbl">
+    <table class="table sorting categories" id="pagesTbl">
         <tr class="home">
             <th>
                 @Html.DisplayNameFor(model => model.Name)
@@ -32,7 +32,7 @@ else
 
         @foreach (var item in Model)
         {
-            <tr>
+            <tr id="id_@item.Id">
                 <td>
                     @Html.EditorFor(modelItem => item.Name, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
                 </td>
@@ -124,8 +124,29 @@ else
                 });
             });
 
-
             /************************************************/
+
+            /*
+            * Adding drad-and-drop functionality using jQuery UI
+            */
+
+            $('table#pagesTbl tbody').sortable({    // in order to sort tr's have to add tbody to selector
+                items: 'tr:not(.home)',
+                placeholder: 'ui-state-highlight',  // adds this class to the place, where dragging to
+                update: function () {
+                    var ids = $('table#pagesTbl tbody').sortable('serialize'); // serializes data from line we are moving
+
+                    var url = '/Admin/Shop/ReorderCategories';
+
+                    $.post(url, ids, function (data) {  // ajax POST request to /Admin/Pages/ReorderPages where we are saving new order of the elements
+                    });
+                }
+            });
+            /************************************************/
+
+
+
+
 
             /*
             * Confirm page deletion
@@ -137,24 +158,6 @@ else
             })
         });
             /************************************************/
-
-        /*
-        * Adding drad-and-drop functionality using jQuery UI
-        */
-
-        $('table#pagesTbl tbody').sortable({    // in order to sort tr's have to add tbody to selector
-            items: 'tr:not(.home)',
-            placeholder: 'ui-state-highlight',  // adds this class to the place, where dragging to
-            update: function () {
-                var ids = $('table#pagesTbl tbody').sortable('serialize'); // serializes data from line we are moving
-
-                var url = '/Admin/Pages/ReorderPages';
-
-                $.post(url, ids, function (data) {  // ajax POST request to /Admin/Pages/ReorderPages where we are saving new order of the elements
-                });
-            }
-        });
-        /************************************************/
     </script>
 
 }
