@@ -102,7 +102,7 @@ else
                         if (!$('table#pages').length) {     // Checking if the table exists
                             location.reload();
                         } else {
-                            ajaxText.html('<span class="alert alert-success">The Categoryhas been added.</span>');
+                            ajaxText.html('<span class="alert alert-success">The Category has been added.</span>');
                             setTimeout(function () {
                                 ajaxText.fadeOut('fast', function () {
                                     ajaxText.html('<img src="/Content/img/ajax-loader.gif" />');
@@ -144,18 +144,17 @@ else
             });
             /************************************************/
 
-
-
-
-
             /*
             * Confirm page deletion
             */
-            $('a.delete').click(function () {
+         //   $('a.delete').click(function () {   // dynamically added and reordered content will not catch this event
+            $('body').on('click', 'a.delete', function () {
                 if (!confirm("Confirm page deletion?")) {
                     return false;
                 }
-            })
+            });
+                
+           // })
         });
             /************************************************/
     </script>

@@ -42,7 +42,7 @@ namespace CmsShoppingCart.Areas.Admin.Controllers
                 // Check that the category name is unique
                 if (db.Categories.Any(x => x.Name == catName))
                 {
-                    return "The category with such name is already exists.";
+                    return "titletaken";
                 }
 
                 // Init DTO
@@ -66,7 +66,7 @@ namespace CmsShoppingCart.Areas.Admin.Controllers
             return id;
         }
 
-        // POST: Admin/Pages/ReorderCategories
+        // POST: Admin/Shop/ReorderCategories
         [HttpPost]
         public void ReorderCategories(int[] id)
         {
@@ -89,6 +89,25 @@ namespace CmsShoppingCart.Areas.Admin.Controllers
                     count++;
                 }
             }
+        }
+
+        // DELETE: Admin/Shop/DeleteCategory/id
+        public ActionResult DeleteCategory(int id)
+        {
+            using (Db db = new Db())
+            {
+                // Get the Category
+                CategoryDTO dto = db.Categories.Find(id);
+
+                // Remove the Category
+                db.Categories.Remove(dto);
+
+                // Save
+                db.SaveChanges();
+
+            }
+            // Redirect
+            return RedirectToAction("Categories");
         }
 
     }
