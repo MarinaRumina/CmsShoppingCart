@@ -163,22 +163,22 @@ else
             */
             var originalTextBoxValue;
 
-            $('table#pagesTbl input.texbox').dblclick(function () {
+            $('table#pagesTbl input.text-box').dblclick(function () {
                 originalTextBoxValue = $(this).val();
-
+                
                 $(this).attr('readonly', false);
             });
 
-            $('table#pagesTbl input.texbox').keyup(function (e) {
+            $('table#pagesTbl input.text-box').keyup(function (e) {
                 if (e.keyCode == 13) {
                     $(this).blur();
                 }
             });
 
-            $('table#pagesTbl input.texbox').blur(function () {
+            $('table#pagesTbl input.text-box').blur(function () {
                 
                 var $this = $(this);
-                var $jaxdiv = $this.parent().find('.ajaxdivtd');
+                var $ajaxdiv = $this.parent().find('.ajaxdivtd');
                 var newCatName = $this.val();
                 var id = $this.parent().parent().attr('id').substring(3);
                 var url = '/admin/shop/RenameCategory';
@@ -195,20 +195,19 @@ else
 
                     if (response == 'titletaken') {
                         $this.val(originalTextBoxValue);
-                        ajaxdiv.html('<span class="alert alert-danger">This Category title already exists!</span>').show();
+                        $ajaxdiv.html('<span class="alert alert-danger">This Category title already exists!</span>').show();
                     } else {
-                        ajaxdiv.html('<span class="alert alert-success">This Category name has been changed successfully!</span>').show();
+                        $ajaxdiv.html('<span class="alert alert-success">This Category name has been changed successfully!</span>').show();
                     }
 
                     setTimeout(function () {
-                        ajaxdiv.fadeOut('fast', function () {
-                            ajaxdiv.html('');
+                        $ajaxdiv.fadeOut('fast', function () {
+                            $ajaxdiv.html('');
                         });
-                    }, 2000)
-                    .done(function () {
-                        $this.attr('readonly', true);
-                    })
+                    }, 2000);
 
+                }).done(function () {
+                    $this.attr('readonly', true);
                 });
             });
 
