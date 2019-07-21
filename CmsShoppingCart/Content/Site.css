@@ -22,3 +22,7 @@ table.sorting tr:not(.home) {
 table.sorting.categories td {
     padding: 20px;
 }
+
+.ajaxdivtd {
+    position: absolute;
+}
