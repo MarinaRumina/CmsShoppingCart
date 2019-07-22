@@ -864,6 +864,7 @@
     <Content Include="Content\fileman\lang\tr.json" />
     <Content Include="Content\fileman\web.config" />
     <Content Include="Areas\Admin\Views\Shop\Categories.cshtml" />
+    <Content Include="Areas\Admin\Views\Shop\AddProduct.cshtml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -908,6 +909,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\Admin\Models\" />
+    <Folder Include="Areas\Admin\Views\Products\" />
     <Folder Include="Content\fileman\aspnet_client\system_web\2_0_50727\" />
     <Folder Include="Content\fileman\aspnet_client\system_web\4_0_30319\" />
     <Folder Include="Content\fileman\tmp\" />

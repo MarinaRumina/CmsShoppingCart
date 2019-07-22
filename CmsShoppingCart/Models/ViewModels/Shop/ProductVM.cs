@@ -19,6 +19,7 @@ namespace CmsShoppingCart.Models.ViewModels.Shop
         public decimal Price { get; set; }
         public string CategoryName { get; set; }
         [Required]
+        [Display(Name = "Category")]
         public int CategoryId { get; set; }
         public string ImageName { get; set; }
 
