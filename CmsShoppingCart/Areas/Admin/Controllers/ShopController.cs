@@ -117,7 +117,7 @@ namespace CmsShoppingCart.Areas.Admin.Controllers
             using (Db db = new Db())
             {
                 // Check Category name is unique
-                if (db.Categories.Any( x => x.Name == newCatName))
+                if (db.Categories.Any(x => x.Name == newCatName))
                 {
                     return "titletaken";
                 }
@@ -138,19 +138,84 @@ namespace CmsShoppingCart.Areas.Admin.Controllers
         }
 
         // GET: admin/shop/AddProduct
-        public ActionResult AddProduct ()
+        [HttpGet]
+        public ActionResult AddProduct()
         {
             // Init model
             ProductVM model = new ProductVM();
 
             // Add select list of categories to model
-            using (Db db = new Db ())
+            using (Db db = new Db())
             {
                 model.Categories = new SelectList(db.Categories.ToList(), "Id", "Name");
             }
 
             // Return view with the model
             return View(model);
+        }
+
+        // POST: admin/shop/AddProduct
+        [HttpPost]
+        public ActionResult AddProduct(ProductVM model, HttpPostedFileBase file)
+        {
+            // Check model state
+            if (!ModelState.IsValid)
+            {
+                // before return the view we have to populate a SelectList every time
+                using (Db db = new Db())
+                {
+                    model.Categories = new SelectList(db.Categories.ToList(), "Id", "Name");
+                    return View(model);
+                }
+            }
+
+            // Make sure that product name is unique
+            using (Db db = new Db())
+            {
+                if (db.Products.Any(x => x.Name == model.Name))
+                {
+                    model.Categories = new SelectList(db.Categories.ToList(), "Id", "Name");
+                    ModelState.AddModelError("", "This product name already exists!");
+                    return View(model);
+                }
+
+            }
+
+            // Declare product Id
+            int id;
+
+            // Init and save DTO
+            using (Db db = new Db())
+            {
+                ProductDTO product = new ProductDTO();
+
+                product.Name = model.Name;
+                product.Slug = model.Name.Replace(" ", "-").ToLower();
+                product.Description = model.Description;
+                product.Price = model.Price;
+                product.CategoryId = model.CategoryId;
+
+                // Getting Category name for this product
+                CategoryDTO catDTO = db.Categories.FirstOrDefault(x => x.Id == model.CategoryId);
+                model.CategoryName = catDTO.Name;
+
+                // Adding a product to the db
+                db.Products.Add(product);
+                db.SaveChanges();
+                // Get inserted id
+                id = product.Id;
+
+            }
+
+            // Set TempData message (if the image was not uploaded the product still will be saved)
+            TempData["SuccessMessage"] = "The product has been added successfully!";
+
+            #region Upload Image
+
+            #endregion
+
+            // Redirect
+            return Redirect("/AddProduct");
         }
 
     }

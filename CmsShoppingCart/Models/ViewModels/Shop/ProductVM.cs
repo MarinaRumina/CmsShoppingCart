@@ -11,16 +11,22 @@ namespace CmsShoppingCart.Models.ViewModels.Shop
     public class ProductVM
     {
         public int Id { get; set; }
+
         [Required]
         public string Name { get; set; }
+
         public string Slug { get; set; }
+
         [Required]
         public string Description { get; set; }
+
         public decimal Price { get; set; }
         public string CategoryName { get; set; }
+
         [Required]
         [Display(Name = "Category")]
         public int CategoryId { get; set; }
+
         public string ImageName { get; set; }
 
         // Adding more properties for a viewmodel
@@ -39,6 +45,7 @@ namespace CmsShoppingCart.Models.ViewModels.Shop
             CategoryId = row.CategoryId;
             ImageName = row.ImageName;
         }
+
         public ProductVM()
         {
 
