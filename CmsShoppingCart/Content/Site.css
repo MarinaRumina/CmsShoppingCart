@@ -26,3 +26,8 @@ table.sorting.categories td {
 .ajaxdivtd {
     position: absolute;
 }
+.pagination li {
+    padding: 2px 10px;
+    border: 1px solid #dee2e6;
+    border-radius: 3px;
+}
