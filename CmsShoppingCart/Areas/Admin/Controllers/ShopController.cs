@@ -2,8 +2,10 @@
 using CmsShoppingCart.Models.ViewModels.Shop;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
+using System.Web.Helpers;
 using System.Web.Mvc;
 
 namespace CmsShoppingCart.Areas.Admin.Controllers
@@ -197,7 +199,7 @@ namespace CmsShoppingCart.Areas.Admin.Controllers
 
                 // Getting Category name for this product
                 CategoryDTO catDTO = db.Categories.FirstOrDefault(x => x.Id == model.CategoryId);
-                model.CategoryName = catDTO.Name;
+                product.CategoryName = catDTO.Name;
 
                 // Adding a product to the db
                 db.Products.Add(product);
@@ -212,11 +214,82 @@ namespace CmsShoppingCart.Areas.Admin.Controllers
 
             #region Upload Image
 
+            // Create necessary directories
+            var originalDirectory = new DirectoryInfo(string.Format("{0}Images\\Upload", Server.MapPath(@"\")));
+
+            var pathString1 = Path.Combine(originalDirectory.ToString(), "Products");
+            var pathString2 = Path.Combine(originalDirectory.ToString(), "Products\\" + id.ToString());
+            var pathString3 = Path.Combine(originalDirectory.ToString(), "Products\\" + id.ToString() + "\\Thumbs");
+            var pathString4 = Path.Combine(originalDirectory.ToString(), "Products\\" + id.ToString() + "\\Gallery");
+            var pathString5 = Path.Combine(originalDirectory.ToString(), "Products\\" + id.ToString() + "\\Gallery\\Thumbs");
+
+            CreateDirectoryIfNotExists(pathString1);
+            CreateDirectoryIfNotExists(pathString2);
+            CreateDirectoryIfNotExists(pathString3);
+            CreateDirectoryIfNotExists(pathString4);
+            CreateDirectoryIfNotExists(pathString5);
+
+            // Check if a file was uploaded
+            if (file != null && file.ContentLength > 0)
+            {
+                // Get file extension
+                string ext = file.ContentType.ToLower();
+
+                // Verify file extension
+                if (ext != "image/jpg" &&
+                    ext != "image/jpeg" &&
+                    ext != "image/pjpeg" &&
+                    ext != "image/gif" &&
+                    ext != "image/x-png" &&
+                    ext != "image/png")
+                {
+                    using (Db db = new Db())
+                    {                        
+                        model.Categories = new SelectList(db.Categories.ToList(), "Id", "Name");
+                        ModelState.AddModelError("", "Image was not uploaded. Wrong image format.");
+                        return View(model);
+                    }
+                }
+
+                // Init image name
+                string imageName = file.FileName;
+
+                // Save image name to DTO
+                using (Db db = new Db())
+                {
+                    ProductDTO dto = db.Products.Find(id);
+
+                    dto.ImageName = imageName;
+
+                    db.SaveChanges();
+                }
+
+                // Set original and thumb image path
+                var path = string.Format("{0}\\{1}", pathString2, imageName);
+                var path2 = string.Format("{0}\\{1}", pathString3, imageName);
+
+                // Save original
+                file.SaveAs(path);
+
+                // Create and save thumb
+                WebImage img = new WebImage(file.InputStream);
+                img.Resize(200, 200);
+                img.Save(path2);
+
+            }
+
             #endregion
 
             // Redirect
-            return Redirect("/AddProduct");
+            return RedirectToAction("AddProduct");
         }
 
+        private void CreateDirectoryIfNotExists (string directoryPath)
+        {
+            if (!Directory.Exists(directoryPath))
+            {
+                Directory.CreateDirectory(directoryPath);
+            }
+        }
     }
 }

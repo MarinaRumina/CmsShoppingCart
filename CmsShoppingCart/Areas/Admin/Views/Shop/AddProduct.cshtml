@@ -6,6 +6,14 @@
 
 <h2>Add Product</h2>
 
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+
+}
+
 @using (Html.BeginForm("AddProduct", "Shop", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
@@ -70,11 +78,11 @@
 @section Scripts {
 
     <script>
-        
+
         $(function () {
-        /*
-        * Preview selected image
-        */
+            /*
+            * Preview selected image
+            */
             function readUrl(input) {
                 if (input.files && input.files[0]) {
 
@@ -95,17 +103,17 @@
                 readUrl(this);
             });
 
-        /************************************************/
+            /************************************************/
 
         });
-        
 
-        /*
-        * Adding drad-and-drop functionality using jQuery UI
-        */
 
-        
-        /************************************************/
+            /*
+            * Adding drad-and-drop functionality using jQuery UI
+            */
+
+
+            /************************************************/
     </script>
 
 }
