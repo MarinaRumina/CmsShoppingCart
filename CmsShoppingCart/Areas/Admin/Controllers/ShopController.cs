@@ -326,6 +326,7 @@ namespace CmsShoppingCart.Areas.Admin.Controllers
         }
 
         // GET: admin/shop/EditProduct
+        [HttpGet]
         public ActionResult EditProduct(int id)
         {
             // Declare productVM
@@ -356,5 +357,52 @@ namespace CmsShoppingCart.Areas.Admin.Controllers
             // Return the view with the model
             return View(model);
         }
+
+        // POST: admin/shop/EditProduct
+        [HttpPost]
+        public ActionResult EditProduct(ProductVM model, HttpPostedFileBase file)
+        {
+            // Get product id
+            int id = model.Id;
+
+            // Populate categories select list and gallery images
+            using (Db db = new Db())
+            {
+                model.Categories = new SelectList(db.Categories.ToList(), "Id", "Name");
+            }
+            model.GalleryImages = Directory.EnumerateFiles(Server.MapPath("~/Images/Upload/Products/" + id + "/Thumbs/"))
+                                               .Select(filename => Path.GetFileName(filename));
+
+            // Check model state
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            // Make sure product name is unique
+            using (Db db = new Db())
+            {
+                if (db.Products.Where(x => x.Id != id).Any(x => x.Name == model.Name)) // if any other product except editing product has same name
+                {
+                    ModelState.AddModelError("", "Product with this name is already exists!");
+                    return View(model);
+                }
+            }
+
+
+            // Update the product
+
+
+            // Set TempData message
+
+
+            #region Image Upload
+
+            #endregion
+
+            // Redirect
+            return View();
+        }
+
     }
 }
