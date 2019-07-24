@@ -245,7 +245,7 @@ namespace CmsShoppingCart.Areas.Admin.Controllers
                     ext != "image/png")
                 {
                     using (Db db = new Db())
-                    {                        
+                    {
                         model.Categories = new SelectList(db.Categories.ToList(), "Id", "Name");
                         ModelState.AddModelError("", "Image was not uploaded. Wrong image format.");
                         return View(model);
@@ -285,7 +285,7 @@ namespace CmsShoppingCart.Areas.Admin.Controllers
             return RedirectToAction("AddProduct");
         }
 
-        private void CreateDirectoryIfNotExists (string directoryPath)
+        private void CreateDirectoryIfNotExists(string directoryPath)
         {
             if (!Directory.Exists(directoryPath))
             {
@@ -294,7 +294,7 @@ namespace CmsShoppingCart.Areas.Admin.Controllers
         }
 
         // GET: admin/shop/Product
-        public ActionResult Products (int? page, int? catId)
+        public ActionResult Products(int? page, int? catId)
         {
             // Declare a list of VM
             List<ProductVM> listOfProductVM;
@@ -309,7 +309,7 @@ namespace CmsShoppingCart.Areas.Admin.Controllers
                                     .Where(x => catId == null || catId == 0 || x.CategoryId == catId)
                                     .Select(x => new ProductVM(x))
                                     .ToList();
-                
+
                 // Populate categories select list
                 ViewBag.Categories = new SelectList(db.Categories.ToList(), "Id", "Name");
 
@@ -323,6 +323,38 @@ namespace CmsShoppingCart.Areas.Admin.Controllers
 
             // Return view with list
             return View(listOfProductVM);
+        }
+
+        // GET: admin/shop/EditProduct
+        public ActionResult EditProduct(int id)
+        {
+            // Declare productVM
+            ProductVM model;
+
+            using (Db db = new Db())
+            {
+                // Get the product by given id
+                ProductDTO dto = db.Products.Find(id);
+
+                // Make sure the product exists
+                if (dto == null)
+                {
+                    return Content("The product you are looking for doesn't exist.");
+                }
+
+                // Init model
+                model = new ProductVM(dto);
+
+                // Make Categories select list
+                model.Categories = new SelectList(db.Categories.ToList(), "Id", "Name");
+
+                // Get all gallery images
+                model.GalleryImages = Directory.EnumerateFiles(Server.MapPath("~/Images/Upload/Products/" + id + "/Thumbs/"))
+                                                .Select(filename => Path.GetFileName(filename));
+            }
+
+            // Return the view with the model
+            return View(model);
         }
     }
 }
