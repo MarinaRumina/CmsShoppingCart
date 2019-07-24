@@ -484,5 +484,30 @@ namespace CmsShoppingCart.Areas.Admin.Controllers
             return RedirectToAction("EditProduct");
         }
 
+        // DELETE: admin/shop/DeleteProduct/id
+        public ActionResult DeleteProduct (int id)
+        {
+            // Delete product from db
+            using (Db db = new Db())
+            {
+                ProductDTO dto = db.Products.Find(id);
+                db.Products.Remove(dto);
+
+                db.SaveChanges();
+            }
+
+            // Delete product's images folder
+            var originalDirectory = new DirectoryInfo(string.Format("{0}Images\\Upload", Server.MapPath(@"\")));
+
+            string pathString = Path.Combine(originalDirectory.ToString(), "Products\\" + id.ToString());
+
+            if (Directory.Exists(pathString))
+            {
+                Directory.Delete(pathString, true);
+            }
+
+            // redirect
+            return RedirectToAction("Products");
+        }
     }
 }

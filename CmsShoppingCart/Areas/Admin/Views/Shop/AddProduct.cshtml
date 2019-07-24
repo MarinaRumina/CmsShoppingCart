@@ -14,7 +14,7 @@
 
 }
 
-@using (Html.BeginForm("EditProduct", "Shop", FormMethod.Post, new { enctype = "multipart/form-data" } ))
+@using (Html.BeginForm("AddProduct", "Shop", FormMethod.Post, new { enctype = "multipart/form-data" } ))
 {
     @Html.AntiForgeryToken()
 
@@ -107,13 +107,6 @@
 
         });
 
-
-            /*
-            * Adding drad-and-drop functionality using jQuery UI
-            */
-
-
-            /************************************************/
     </script>
 
 }
