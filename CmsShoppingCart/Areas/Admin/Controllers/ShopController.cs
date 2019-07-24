@@ -391,17 +391,97 @@ namespace CmsShoppingCart.Areas.Admin.Controllers
 
 
             // Update the product
+            using (Db db = new Db())
+            {
+                ProductDTO dto = db.Products.Find(id);
 
+                dto.Name = model.Name;
+                dto.Slug = model.Name.Replace(" ", "-");
+                dto.Description = model.Description;
+                dto.Price = model.Price;
+                dto.CategoryId = model.CategoryId;
+                dto.ImageName = model.ImageName;
+
+                CategoryDTO catDto = db.Categories.FirstOrDefault(x => x.Id == model.CategoryId);
+                dto.CategoryName = catDto.Name;
+
+                db.SaveChanges();
+            }
 
             // Set TempData message
-
+            TempData["SuccessMessage"] = "Changes were saved successfully!";
 
             #region Image Upload
+            // Check for file upload
+            if (file !=null && file.ContentLength > 0)
+            {
+                // Get extension
+                string ext = file.ContentType.ToLower();
 
+                // Verify file extension
+                if (ext != "image/jpg" &&
+                    ext != "image/jpeg" &&
+                    ext != "image/pjpeg" &&
+                    ext != "image/gif" &&
+                    ext != "image/x-png" &&
+                    ext != "image/png")
+                {
+                    using (Db db = new Db())
+                    {
+                        ModelState.AddModelError("", "Image was not uploaded. Wrong image format.");
+                        return View(model);
+                    }
+                }
+
+                // Set upload directory paths
+                var originalDirectory = new DirectoryInfo(string.Format("{0}Images\\Upload", Server.MapPath(@"\")));
+
+                var pathString1 = Path.Combine(originalDirectory.ToString(), "Products\\" + id.ToString());
+                var pathString2 = Path.Combine(originalDirectory.ToString(), "Products\\" + id.ToString() + "\\Thumbs");
+
+                // Delete files from directories
+                DirectoryInfo di1 = new DirectoryInfo(pathString1);
+                DirectoryInfo di2 = new DirectoryInfo(pathString2);
+
+                foreach (FileInfo file1 in di1.GetFiles())
+                {
+                    file1.Delete();
+                }
+
+                foreach (FileInfo file2 in di2.GetFiles())
+                {
+                    file2.Delete();
+                }
+                // Save image name
+                string imageName = file.FileName;
+
+                using (Db db = new Db())
+                {
+                    ProductDTO dto = db.Products.Find(id);
+                    dto.ImageName = imageName;
+
+                    db.SaveChanges();
+
+                }
+
+                // Save original and thumbs images
+                // Set original and thumb image path
+                var path1 = string.Format("{0}\\{1}", pathString1, imageName);
+                var path2 = string.Format("{0}\\{1}", pathString2, imageName);
+
+                // Save original
+                file.SaveAs(path1);
+
+                // Create and save thumb
+                WebImage img = new WebImage(file.InputStream);
+                img.Resize(200, 200);
+                img.Save(path2);
+
+            }
             #endregion
 
             // Redirect
-            return View();
+            return RedirectToAction("EditProduct");
         }
 
     }
