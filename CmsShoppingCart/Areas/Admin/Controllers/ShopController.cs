@@ -274,7 +274,7 @@ namespace CmsShoppingCart.Areas.Admin.Controllers
 
                 // Create and save thumb
                 WebImage img = new WebImage(file.InputStream);
-                img.Resize(200, 200);
+                img.Resize(200, 200, true);
                 img.Save(path2);
 
             }
@@ -350,7 +350,7 @@ namespace CmsShoppingCart.Areas.Admin.Controllers
                 model.Categories = new SelectList(db.Categories.ToList(), "Id", "Name");
 
                 // Get all gallery images
-                model.GalleryImages = Directory.EnumerateFiles(Server.MapPath("~/Images/Upload/Products/" + id + "/Thumbs/"))
+                model.GalleryImages = Directory.EnumerateFiles(Server.MapPath("~/Images/Upload/Products/" + id + "/Gallery/Thumbs/"))
                                                 .Select(filename => Path.GetFileName(filename));
             }
 
@@ -413,7 +413,7 @@ namespace CmsShoppingCart.Areas.Admin.Controllers
 
             #region Image Upload
             // Check for file upload
-            if (file !=null && file.ContentLength > 0)
+            if (file != null && file.ContentLength > 0)
             {
                 // Get extension
                 string ext = file.ContentType.ToLower();
@@ -474,7 +474,7 @@ namespace CmsShoppingCart.Areas.Admin.Controllers
 
                 // Create and save thumb
                 WebImage img = new WebImage(file.InputStream);
-                img.Resize(200, 200);
+                img.Resize(200, 200, true);
                 img.Save(path2);
 
             }
@@ -485,7 +485,7 @@ namespace CmsShoppingCart.Areas.Admin.Controllers
         }
 
         // DELETE: admin/shop/DeleteProduct/id
-        public ActionResult DeleteProduct (int id)
+        public ActionResult DeleteProduct(int id)
         {
             // Delete product from db
             using (Db db = new Db())
@@ -508,6 +508,43 @@ namespace CmsShoppingCart.Areas.Admin.Controllers
 
             // redirect
             return RedirectToAction("Products");
+        }
+
+        // POST: admin/shop/SaveGalleryImages
+        [HttpPost]
+        public void SaveGalleryImages(int id)
+        {
+            // Loop through the files
+            foreach (string fileName in Request.Files)
+            {
+                // Init the file
+                HttpPostedFileBase file = Request.Files[fileName];
+
+                // Check it is not null
+                if (file != null && file.ContentLength > 0)
+                {
+                    // Set directory paths
+                    var originalDirectory = new DirectoryInfo(string.Format("{0}Images\\Upload", Server.MapPath(@"\")));
+
+                    string pathString1 = Path.Combine(originalDirectory.ToString(), "Products\\" + id.ToString() + "\\Gallery");
+                    string pathString2 = Path.Combine(originalDirectory.ToString(), "Products\\" + id.ToString() + "\\Gallery\\Thumbs");
+                    CreateDirectoryIfNotExists(pathString1);
+                    CreateDirectoryIfNotExists(pathString2);
+
+                    // Set image paths
+                    var path1 = string.Format("{0}\\{1}", pathString1, file.FileName);
+                    var path2 = string.Format("{0}\\{1}", pathString2, file.FileName);
+
+                    // Save original and thumb
+                    file.SaveAs(path1);
+
+                    WebImage img = new WebImage(file.InputStream);
+                    img.Resize(200, 200, true);
+                    img.Save(path2);
+                }
+
+            }
+
         }
     }
 }
