@@ -31,3 +31,13 @@ table.sorting.categories td {
     border: 1px solid #dee2e6;
     border-radius: 3px;
 }
+
+.productGalleryImage {
+    display: inline-block;
+    margin-right: 15px;
+    text-align: center;
+}
+
+.productGalleryImage > img {
+    display: block;
+}
