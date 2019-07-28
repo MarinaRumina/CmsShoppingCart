@@ -162,6 +162,7 @@
     <Compile Include="Areas\Admin\Controllers\DashboardController.cs" />
     <Compile Include="Areas\Admin\Controllers\PagesController.cs" />
     <Compile Include="Areas\Admin\Controllers\ShopController.cs" />
+    <Compile Include="Controllers\PagesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -931,7 +932,7 @@
     <Folder Include="Content\fileman\tmp\" />
     <Folder Include="Content\fileman\Uploads\Documents\" />
     <Folder Include="Content\fileman\Uploads\FLV\" />
-    <Folder Include="Controllers\" />
+    <Folder Include="Views\Pages\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
