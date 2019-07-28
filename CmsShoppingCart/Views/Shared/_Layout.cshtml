@@ -3,12 +3,36 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <title>@ViewBag.Title - CmsShoppingCart</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <a class="navbar-brand font-weight-bold" href="/admin/dashboard">Dashboard</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <a href="/" class="navbar-brand">CmsShoppingCart</a>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                @*<li class="nav-item active">
+                    <a class="nav-link" href="/admin/pages">Pages<span class="sr-only">(current)</span></a>
+                </li>*@
+               @Html.Action("PagesMenuPartial", "Pages")
+            </ul>
+
+            <ul class="navbar-nav float-right font-weight-bold">
+                <li><a href="/" class="navbar-brand" target="_blank">CmsShoppingCart</a></li>
+            </ul>
+
+        </div>
+    </nav>
+
+    @*<div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -26,17 +50,35 @@
                 </ul>
             </div>
         </div>
-    </div>
+    </div>*@
+
     <div class="container body-content">
-        @RenderBody()
+        <div class="row">
+
+            @if (ViewBag.Sidebar == "Yes")
+            {
+                <div class="col-sm col-md-7">
+                    @RenderBody()
+                </div>
+                <div class="col-sm col-md-3">
+
+                </div>
+            }
+            else
+            {
+                <div class="col-sm col-md-10">
+                    @RenderBody()
+                </div>
+            }
+        </div>
+
         <hr />
         <footer>
             <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
         </footer>
     </div>
 
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/scripts")
     @RenderSection("scripts", required: false)
 </body>
 </html>

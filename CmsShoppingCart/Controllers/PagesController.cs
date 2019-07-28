@@ -58,5 +58,24 @@ namespace CmsShoppingCart.Controllers
             // Return view with model
             return View(model);
         }
+
+        public ActionResult PagesMenuPartial()
+        {
+            // Declare a list of PageVM
+            List<PageVM> pageVMList;
+
+            // Get all pages except home page
+            using (Db db = new Db())
+            {
+                pageVMList = db.Pages
+                                .ToArray()
+                                .OrderBy(x => x.Sorting)
+                                .Where(x => x.Slug != "home")
+                                .Select(x => new PageVM(x))
+                                .ToList();
+            }
+            //Return partial view with the list            
+            return PartialView(pageVMList);
+        }
     }
 }
