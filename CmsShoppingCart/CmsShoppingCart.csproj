@@ -923,6 +923,7 @@
     <Content Include="Scripts\popper.js.map" />
     <Content Include="Scripts\popper-utils.min.js.map" />
     <Content Include="Scripts\popper-utils.js.map" />
+    <Content Include="Views\Pages\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\Admin\Models\" />
@@ -932,7 +933,6 @@
     <Folder Include="Content\fileman\tmp\" />
     <Folder Include="Content\fileman\Uploads\Documents\" />
     <Folder Include="Content\fileman\Uploads\FLV\" />
-    <Folder Include="Views\Pages\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
