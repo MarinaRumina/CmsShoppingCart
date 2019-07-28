@@ -1,4 +1,5 @@
 ﻿using CmsShoppingCart.Models.Data;
+using CmsShoppingCart.Models.ViewModels;
 using CmsShoppingCart.Models.ViewModels.Pages;
 using System;
 using System.Collections.Generic;
@@ -76,6 +77,22 @@ namespace CmsShoppingCart.Controllers
             }
             //Return partial view with the list            
             return PartialView(pageVMList);
+        }
+
+        public ActionResult SidebarPartial()
+        {
+            // Declare the model
+            SidebarVM model;
+
+            // Init the model   
+            using (Db db = new Db())
+            {
+                SidebarDTO dto = db.Sidebar.Find(1);
+
+                model = new SidebarVM(dto);
+            }
+            //Return partial view with the model            
+            return PartialView(model);
         }
     }
 }
