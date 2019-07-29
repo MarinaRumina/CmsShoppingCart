@@ -41,3 +41,15 @@ table.sorting.categories td {
 .productGalleryImage > img {
     display: block;
 }
+
+.loader {
+    display: none;
+}
+.ajaxmsg {
+    background: green;
+    color: white;
+    padding: 10px;
+    display: none;
+    position: absolute;
+    bottom: 0;
+}

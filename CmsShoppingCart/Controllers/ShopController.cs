@@ -2,6 +2,7 @@
 using CmsShoppingCart.Models.ViewModels.Shop;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -58,6 +59,43 @@ namespace CmsShoppingCart.Controllers
             }
             // Return view with the list
             return View(productVMList);
+        }
+
+        // GET: /shop/product-details/name
+        [ActionName("product-details")]     // changing request from ProductDetails to product-details
+        public ActionResult ProductDetails(string name)
+        {
+            // Declare the VM and the DTO
+            ProductVM model;
+            ProductDTO dto;
+
+            // Init product id
+            int id = 0;
+
+            using (Db db = new Db())
+            {
+                // Check if product exists
+                if (!db.Products.Any(x => x.Slug.Equals(name)))
+                {
+                    return RedirectToAction("Index", "Shop");
+                }
+
+                // Init productDTO
+                dto = db.Products.Where(x => x.Slug == name).FirstOrDefault();
+
+                // Get the product id
+                id = dto.Id;
+
+                // Init model
+                model = new ProductVM(dto);
+            }
+
+            // Get gallery images
+            model.GalleryImages = Directory.EnumerateFiles(Server.MapPath("~/Images/Upload/Products/" + id + "/Gallery/Thumbs/"))
+                                               .Select(filename => Path.GetFileName(filename));
+
+            // Return view with the model
+            return View("ProductDetails", model);
         }
     }
 }
