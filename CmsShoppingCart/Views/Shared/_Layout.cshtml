@@ -31,6 +31,10 @@
     <div class="container body-content">
         <div class="row">
 
+            <div class="col-sm col-md-2">
+                @Html.Action("CategoryMenuPartial", "Shop")
+            </div>
+
             @if (ViewBag.Sidebar == "Yes")
             {
                 <div class="col-sm col-md-7">
